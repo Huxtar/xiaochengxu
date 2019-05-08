@@ -39,6 +39,7 @@ import card from '@/components/card'
 export default {
   data () {
     return {
+      a:[],
       motto: 'Hello miniprograme',
       userInfo: {
         nickName: 'mpvue',
