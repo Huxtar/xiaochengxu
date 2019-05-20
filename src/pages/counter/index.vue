@@ -1,44 +1,66 @@
 <template>
-  <div class="counter-warp">
-    <p>Vuex counter：{{ count  }}</p>
-    <p>
-      <button @click="increment">+</button>
-      <button @click="decrement">- </button>
-    </p>
+  <div>
+    <swiper
+      :indicator-dots="indicatorDots"
+      :autoplay="autoplay"
+      :interval="interval"
+      :duration="duration"
+      style="height:200px"
+    >
+    <block v-for="item in imgUrls" :key="item">
+      <swiper-item>
+        <image :src="item" style="width:100%;"/>
+      </swiper-item>
+    </block>
+  </swiper>
+  <i-grid i-class="no-border">
+      <i-grid-item @click="goList(item.url)" i-class="no-border" v-for="item in grids" :key="item">
+          <i-grid-icon>
+              <image :src="item.img" />
+          </i-grid-icon>
+          <i-grid-label>{{item.type}}</i-grid-label>
+      </i-grid-item>
+  </i-grid>
   </div>
 </template>
 
 <script>
-// Use Vuex
-import store from './store'
+import card from '@/components/card'
 
 export default {
-  computed: {
-    count () {
-      return store.state.count
+  data () {
+    return {
+      imgUrls: [
+        'http://www.canyin88.com/uploads/image/2019/04/16/1555378220872933.jpg',
+        'http://www.canyin88.com/uploads/image/2019/04/15/1555321255843942.jpg',
+        'http://www.canyin88.com/uploads/190415/99ad8154e7332ca96ccb323580b3b8a2_3.jpg'
+      ],
+      indicatorDots: true,
+      autoplay: true,
+      interval: 5000,
+      duration: 1000,
     }
   },
+
+  components: {
+    card
+  },
+
   methods: {
-    increment () {
-      store.commit('increment')
-    },
-    decrement () {
-      store.commit('decrement')
-    }
+   
+  },
+
+  created () {
+    // let app = getApp()
   }
 }
 </script>
 
-<style>
-.counter-warp {
-  text-align: center;
-  margin-top: 100px;
+<style scoped>
+div >>> .no-border {
+  border-width: 0pt;
 }
-.home {
-  display: inline-block;
-  margin: 100px auto;
-  padding: 5px 10px;
-  color: blue;
-  border: 1px solid blue;
+div >>> .split {
+  margin-bottom: 10pt;
 }
 </style>
