@@ -1,50 +1,63 @@
 <template>
-  <div @click="clickHandle">
-
-    <div class="userinfo" @click="bindViewTap">
-      <img class="userinfo-avatar" v-if="userInfo.avatarUrl" :src="userInfo.avatarUrl" background-size="cover" />
-      <img class="userinfo-avatar" src="/static/images/user.png" background-size="cover" />
-
-      <div class="userinfo-nickname">
-        <card :text="userInfo.nickName"></card>
-      </div>
-    </div>
-
-    <div class="usermotto">
-      <div class="user-motto">
-        <card :text="motto"></card>
-      </div>
-    </div>
-
-    <form class="form-container">
-      <input type="text" class="form-control" :value="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model="motto" placeholder="v-model" />
-      <input type="text" class="form-control" v-model.lazy="motto" placeholder="v-model.lazy" />
-    </form>
-
-    <a href="/pages/counter/main" class="counter">wo de di yi ge xiao cheng xu</a>
-
-    <div class="all">
-        <div class="left">
-        </div>
-        <div class="right">
-        </div>
-    </div>
+  <div>
+    <swiper
+      :indicator-dots="indicatorDots"
+      :autoplay="autoplay"
+      :interval="interval"
+      :duration="duration"
+      style="height:200px"
+    >
+    <block v-for="item in imgUrls" :key="item">
+      <swiper-item>
+        <image :src="item" style="width:100%;"/>
+      </swiper-item>
+    </block>
+  </swiper>
+  <i-grid i-class="no-border">
+      <i-grid-item @click="goList(item.url)" i-class="no-border" v-for="item in grids" :key="item">
+          <i-grid-icon>
+              <image :src="item.img" />
+          </i-grid-icon>
+          <i-grid-label>{{item.type}}</i-grid-label>
+      </i-grid-item>
+  </i-grid>
+  <i-panel title="强烈推荐">
+    <view>
+      <i-card @click="goType(item.type)" i-class="split" v-for="item in recommand" :key="item" :extra="item.name" :thumb="item.img">
+          <view slot="content">推荐理由：{{item.remark}}</view>
+          <view slot="footer">地址：{{item.address}}</view>
+      </i-card>
+    </view>
+  </i-panel>
   </div>
 </template>
 
 <script>
 import card from '@/components/card'
+import top from '@/data/top.json'
+
+
 
 export default {
   data () {
     return {
-      a:[],
-      motto: 'Hello miniprograme',
-      userInfo: {
-        nickName: 'mpvue',
-        avatarUrl: 'http://mpvue.com/assets/logo.png'
-      }
+      imgUrls: [
+        'http://www.canyin88.com/uploads/image/2019/04/16/1555378220872933.jpg',
+        'http://www.canyin88.com/uploads/image/2019/04/15/1555321255843942.jpg',
+        'http://www.canyin88.com/uploads/190415/99ad8154e7332ca96ccb323580b3b8a2_3.jpg'
+      ],
+      indicatorDots: true,
+      autoplay: true,
+      interval: 5000,
+      duration: 1000,
+      grids: [
+        {type:'烧烤',img:'/static/grids/1.png',"url":'../list/main?type=1'},
+        {type:'零食',img:'/static/grids/2.png',"url":'../list/main?type=2'},
+        {type:'饮料',img:'/static/grids/3.png',"url":'../list/main?type=3'},
+        {type:'主食',img:'/static/grids/4.png',"url":'../list/main?type=4'},
+        {type:'面馆',img:'/static/grids/5.png',"url":'../list/main?type=5'}
+      ],
+      recommand: top
     }
   },
 
@@ -53,17 +66,12 @@ export default {
   },
 
   methods: {
-    bindViewTap () {
-      const url = '../logs/main'
-      if (mpvuePlatform === 'wx') {
-        mpvue.switchTab({ url })
-      } else {
-        mpvue.navigateTo({ url })
-      }
+    goList (url) {
+      mpvue.navigateTo({ url })
     },
-    clickHandle (ev) {
-      console.log('clickHandle:', ev)
-      // throw {message: 'custom test'}
+    goType (type) {
+      let url = '../list/main?type=' + type
+      mpvue.navigateTo({ url })
     }
   },
 
@@ -74,54 +82,10 @@ export default {
 </script>
 
 <style scoped>
-.userinfo {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+div >>> .no-border {
+  border-width: 0pt;
 }
-
-.userinfo-avatar {
-  width: 128rpx;
-  height: 128rpx;
-  margin: 20rpx;
-  border-radius: 50%;
-}
-
-.userinfo-nickname {
-  color: #aaa;
-}
-
-.usermotto {
-  margin-top: 150px;
-}
-
-.form-control {
-  display: block;
-  padding: 0 12px;
-  margin-bottom: 5px;
-  border: 1px solid #ccc;
-}
-.all{
-  width:7.5rem;
-  height:1rem;
-  background-color:blue;
-}
-.all:after{
-  display:block;
-  content:'';
-  clear:both;
-}
-.left{
-  float:left;
-  width:3rem;
-  height:1rem;
-  background-color:red;
-}
-
-.right{
-  float:left;
-  width:4.5rem;
-  height:1rem;
-  background-color:green;
+div >>> .split {
+  margin-bottom: 10pt;
 }
 </style>
